@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="zh-cn">
+  <head>
+    <title>nacos快速上手 // LQY的备忘录</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.119.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="LQY" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.ead1f6492242b7d93618e6840b25260f8ea1ca68dc04cc9cf1b88adcb996693b.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="nacos快速上手"/>
+<meta name="twitter:description" content="SpringCloud SpringCloudAlibaba工程构建 父工程中的导入依赖进行统一版本管理，版本对应参考网址：
+springCloud对应SpringBoot版本：https://spring.io/projects/spring-cloud#overview springCloud对应SpringCloudAlibaba：https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E 父工程导入依赖：
+&lt;dependencyManagement&gt; &lt;dependencies&gt; &lt;!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies --&gt; &lt;dependency&gt; &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt; &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt; &lt;version&gt;2022.0.2&lt;/version&gt; &lt;type&gt;pom&lt;/type&gt; &lt;scope&gt;import&lt;/scope&gt; &lt;/dependency&gt; &lt;!-- --&gt; &lt;dependency&gt; &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt; &lt;artifactId&gt;spring-cloud-alibaba-dependencies&lt;/artifactId&gt; &lt;version&gt;2022.0.0.0&lt;/version&gt; &lt;type&gt;pom&lt;/type&gt; &lt;scope&gt;import&lt;/scope&gt; &lt;/dependency&gt; &lt;!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies --&gt; &lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-dependencies&lt;/artifactId&gt; &lt;version&gt;3.1.2&lt;/version&gt; &lt;type&gt;pom&lt;/type&gt; &lt;scope&gt;import&lt;/scope&gt; &lt;/dependency&gt; &lt;/dependencies&gt; &lt;/dependencyManagement&gt; 子工程依赖为：
+&lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt; &lt;/dependency&gt; &lt;dependency&gt; &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt; &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;/artifactId&gt; &lt;/dependency&gt; &lt;/dependencies&gt; 注意：子工程中的SpringBoot配置文件必须为application.xxxx,否则无法正确加载配置文件
+启动nacos服务 注意：
+在2.2.0.1和2.2.1版本时，必须执行此变更，否则无法启动；其他版本为建议设置。
+修改conf目录下的application.properties文件。
+设置其中的nacos.core.auth.plugin.nacos.token.secret.key值，详情可查看鉴权-自定义密钥.
+注意，文档中的默认值SecretKey012345678901234567890123456789012345678901234567890123456789和VGhpc0lzTXlDdXN0b21TZWNyZXRLZXkwMTIzNDU2Nzg=为公开默认值，可用于临时测试，实际使用时请务必更换为自定义的其他有效值。
+可以修改start.cmd中的启动模式为单例模式或者是集群模式（standalone/cluster）;
+服务启动后，访问默认网址http://localhost:8848/nacos/index.html进行服务管理
+服务调用 使用Ribbon的负载均衡来调用服务 在配置类中添加RestTemplate来获取服务 注意：在springCloud2022.0.0.1版本中使用@LoadBalanced注解，需要先在pom中添加spring-cloud-starter-loadbalancer的依赖才会产生作用
+@LoadBalanced @Bean public RestTemplate restTemplate(){ return new RestTemplate(); } 在要使用的类中自动装配restTemplate,使用value获取配置文件中的微服务访问的地址"/>
+
+    <meta property="og:title" content="nacos快速上手" />
+<meta property="og:description" content="SpringCloud SpringCloudAlibaba工程构建 父工程中的导入依赖进行统一版本管理，版本对应参考网址：
+springCloud对应SpringBoot版本：https://spring.io/projects/spring-cloud#overview springCloud对应SpringCloudAlibaba：https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E 父工程导入依赖：
+&lt;dependencyManagement&gt; &lt;dependencies&gt; &lt;!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies --&gt; &lt;dependency&gt; &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt; &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt; &lt;version&gt;2022.0.2&lt;/version&gt; &lt;type&gt;pom&lt;/type&gt; &lt;scope&gt;import&lt;/scope&gt; &lt;/dependency&gt; &lt;!-- --&gt; &lt;dependency&gt; &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt; &lt;artifactId&gt;spring-cloud-alibaba-dependencies&lt;/artifactId&gt; &lt;version&gt;2022.0.0.0&lt;/version&gt; &lt;type&gt;pom&lt;/type&gt; &lt;scope&gt;import&lt;/scope&gt; &lt;/dependency&gt; &lt;!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies --&gt; &lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-dependencies&lt;/artifactId&gt; &lt;version&gt;3.1.2&lt;/version&gt; &lt;type&gt;pom&lt;/type&gt; &lt;scope&gt;import&lt;/scope&gt; &lt;/dependency&gt; &lt;/dependencies&gt; &lt;/dependencyManagement&gt; 子工程依赖为：
+&lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt; &lt;/dependency&gt; &lt;dependency&gt; &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt; &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;/artifactId&gt; &lt;/dependency&gt; &lt;/dependencies&gt; 注意：子工程中的SpringBoot配置文件必须为application.xxxx,否则无法正确加载配置文件
+启动nacos服务 注意：
+在2.2.0.1和2.2.1版本时，必须执行此变更，否则无法启动；其他版本为建议设置。
+修改conf目录下的application.properties文件。
+设置其中的nacos.core.auth.plugin.nacos.token.secret.key值，详情可查看鉴权-自定义密钥.
+注意，文档中的默认值SecretKey012345678901234567890123456789012345678901234567890123456789和VGhpc0lzTXlDdXN0b21TZWNyZXRLZXkwMTIzNDU2Nzg=为公开默认值，可用于临时测试，实际使用时请务必更换为自定义的其他有效值。
+可以修改start.cmd中的启动模式为单例模式或者是集群模式（standalone/cluster）;
+服务启动后，访问默认网址http://localhost:8848/nacos/index.html进行服务管理
+服务调用 使用Ribbon的负载均衡来调用服务 在配置类中添加RestTemplate来获取服务 注意：在springCloud2022.0.0.1版本中使用@LoadBalanced注解，需要先在pom中添加spring-cloud-starter-loadbalancer的依赖才会产生作用
+@LoadBalanced @Bean public RestTemplate restTemplate(){ return new RestTemplate(); } 在要使用的类中自动装配restTemplate,使用value获取配置文件中的微服务访问的地址" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lyfantasy.github.io/post/springcloudalibaba/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-08-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-08-23T00:00:00+00:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://lyfantasy.github.io/"><img class="app-header-avatar" src="/images/03.jpg" alt="LQY" /></a>
+      <span class="app-header-title">LQY的备忘录</span>
+      <p>关山难越，谁悲失路之人；萍水相逢，尽是他乡之客。</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/lyfantasy" target="_blank" rel="noreferrer noopener me">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>Github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">nacos快速上手</h1>
+      <div class="post-meta">
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Aug 23, 2023
+        </div>
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          2 min read
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h2 id="springcloud">SpringCloud</h2>
+<h3 id="springcloudalibaba工程构建">SpringCloudAlibaba工程构建</h3>
+<p>父工程中的导入依赖进行统一版本管理，版本对应参考网址：</p>
+<ul>
+<li>springCloud对应SpringBoot版本：<a href="https://spring.io/projects/spring-cloud#overview">https://spring.io/projects/spring-cloud#overview</a></li>
+<li>springCloud对应SpringCloudAlibaba：<a href="https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E">https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E</a></li>
+</ul>
+<p>父工程导入依赖：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;dependencyManagement&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;dependencies&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">&lt;!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies --&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;groupId&gt;</span>org.springframework.cloud<span style="color:#f92672">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;artifactId&gt;</span>spring-cloud-dependencies<span style="color:#f92672">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;version&gt;</span>2022.0.2<span style="color:#f92672">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;type&gt;</span>pom<span style="color:#f92672">&lt;/type&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;scope&gt;</span>import<span style="color:#f92672">&lt;/scope&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;/dependency&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">&lt;!--  --&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;groupId&gt;</span>com.alibaba.cloud<span style="color:#f92672">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;artifactId&gt;</span>spring-cloud-alibaba-dependencies<span style="color:#f92672">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;version&gt;</span>2022.0.0.0<span style="color:#f92672">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;type&gt;</span>pom<span style="color:#f92672">&lt;/type&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;scope&gt;</span>import<span style="color:#f92672">&lt;/scope&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;/dependency&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">&lt;!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies --&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;groupId&gt;</span>org.springframework.boot<span style="color:#f92672">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;artifactId&gt;</span>spring-boot-dependencies<span style="color:#f92672">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;version&gt;</span>3.1.2<span style="color:#f92672">&lt;/version&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;type&gt;</span>pom<span style="color:#f92672">&lt;/type&gt;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&lt;scope&gt;</span>import<span style="color:#f92672">&lt;/scope&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;/dependency&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/dependencies&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dependencyManagement&gt;</span>
+</span></span></code></pre></div><p>子工程依赖为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;dependencies&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;groupId&gt;</span>org.springframework.boot<span style="color:#f92672">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;artifactId&gt;</span>spring-boot-starter-web<span style="color:#f92672">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/dependency&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;groupId&gt;</span>com.alibaba.cloud<span style="color:#f92672">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;artifactId&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span style="color:#f92672">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/dependency&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dependencies&gt;</span>
+</span></span></code></pre></div><p><strong>注意：子工程中的SpringBoot配置文件必须为application.xxxx,否则无法正确加载配置文件</strong></p>
+<hr>
+<h3 id="启动nacos服务">启动nacos服务</h3>
+<p>注意：</p>
+<blockquote>
+<p>在2.2.0.1和2.2.1版本时，必须执行此变更，否则无法启动；其他版本为建议设置。</p>
+</blockquote>
+<p>修改conf目录下的application.properties文件。</p>
+<p>设置其中的nacos.core.auth.plugin.nacos.token.secret.key值，详情可查看鉴权-自定义密钥.</p>
+<blockquote>
+<p>注意，文档中的默认值SecretKey012345678901234567890123456789012345678901234567890123456789和VGhpc0lzTXlDdXN0b21TZWNyZXRLZXkwMTIzNDU2Nzg=为公开默认值，可用于临时测试，实际使用时请务必更换为自定义的其他有效值。</p>
+</blockquote>
+<p>可以修改start.cmd中的启动模式为单例模式或者是集群模式（standalone/cluster）;</p>
+<p>服务启动后，访问默认网址<a href="http://localhost:8848/nacos/index.html">http://localhost:8848/nacos/index.html</a>进行服务管理</p>
+<h3 id="服务调用">服务调用</h3>
+<p>使用Ribbon的负载均衡来调用服务
+在配置类中添加RestTemplate来获取服务
+<strong>注意：在springCloud2022.0.0.1版本中使用@LoadBalanced注解，需要先在pom中添加spring-cloud-starter-loadbalancer的依赖才会产生作用</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@LoadBalanced</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Bean</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> RestTemplate <span style="color:#a6e22e">restTemplate</span><span style="color:#f92672">(){</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> RestTemplate<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>在要使用的类中自动装配restTemplate,使用value获取配置文件中的微服务访问的地址</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Autowired</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> RestTemplate restTemplate<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Value</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;${url-config-name}&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> String url<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@GetMapping</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getName</span><span style="color:#f92672">(){</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> restTemplate<span style="color:#f92672">.</span><span style="color:#a6e22e">getForEntity</span><span style="color:#f92672">(</span>url<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;param&#34;</span><span style="color:#f92672">,</span>String<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="nacos配置中心">nacos配置中心</h3>
+<p>导入依赖
+<strong>注意：因为版本原因，需要导入bootstrap依赖才能成功启动</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;dependencies&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;groupId&gt;</span>org.springframework.boot<span style="color:#f92672">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;artifactId&gt;</span>spring-boot-starter-web<span style="color:#f92672">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/dependency&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;groupId&gt;</span>com.alibaba.cloud<span style="color:#f92672">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;artifactId&gt;</span>spring-cloud-starter-alibaba-nacos-config<span style="color:#f92672">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/dependency&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;groupId&gt;</span>org.springframework.cloud<span style="color:#f92672">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;artifactId&gt;</span>spring-cloud-starter-bootstrap<span style="color:#f92672">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/dependency&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dependencies&gt;</span>
+</span></span></code></pre></div><p>在nacos中添加一个配置文件，设置命名空间（默认为public），组别</p>
+<blockquote>
+<p>配置文件通过命名空间和组别实现多类型和需求配置文件的管理</p>
+</blockquote>
+<p>在配置文件中填写要读取的配置文件的信息，如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">server</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">port</span>: <span style="color:#ae81ff">10000</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spring</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">application</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nacos-config</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">cloud</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">nacos</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">config</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">server-addr</span>: <span style="color:#ae81ff">127.0.0.1</span>:<span style="color:#ae81ff">8848</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 文件扩展名</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">file-extension</span>: <span style="color:#ae81ff">yaml</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 命名空间</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">b4e69e6f-aa29-408f-858c-c9bac446eb83</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 共享配置文件,可以有多个</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">## 默认为DEFAULT_GROUP</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">shared-configs</span>:
+</span></span><span style="display:flex;"><span>          - <span style="color:#f92672">data-id</span>: <span style="color:#ae81ff">nacos-config-dev.yaml</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 是否自动刷新,默认为否</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">refresh</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">group</span>: <span style="color:#ae81ff">ORDER_GROUP</span>
+</span></span><span style="display:flex;"><span>          - <span style="color:#f92672">data-id</span>: <span style="color:#ae81ff">nacos-config-dev.yaml</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">refresh</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">profiles</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">active</span>: <span style="color:#ae81ff">dev</span>
+</span></span></code></pre></div><p>新建一个controller来测试，直接使用@Value注解来读取配置文件信息
+使用@RefreshScope注解来实现自动刷新</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@RestController</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@RefreshScope</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TestController</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Value</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;${services.url}&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String str<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Value</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;${services.url1}&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String str2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@GetMapping</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">getStr</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> str <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;----&#34;</span> <span style="color:#f92672">+</span> str2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h4 id="数据持久化">数据持久化</h4>
+<p>nacos支持使用mysql实现数据持久化</p>
+<blockquote>
+<p>默认情况下，文件保存在nacos-server/data/derby-data/中</p>
+</blockquote>
+<p>要使用自定义数据库来保存数据,需要在/conf/application.properties配置文件中修改数据库配置项</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-properties" data-lang="properties"><span style="display:flex;"><span><span style="color:#75715e">#*************** Config Module Related Configurations ***************#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">### If use MySQL as datasource:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">### Deprecated configuration property, it is recommended to use `spring.sql.init.platform` replaced.</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">spring.datasource.platform</span><span style="color:#f92672">=</span><span style="color:#e6db74">mysql</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">spring.sql.init.platform</span><span style="color:#f92672">=</span><span style="color:#e6db74">mysql</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">### Count of DB:</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">db.num</span><span style="color:#f92672">=</span><span style="color:#e6db74">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">### Connect URL of DB:</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">db.url.0</span><span style="color:#f92672">=</span><span style="color:#e6db74">jdbc:mysql://127.0.0.1:3306/nacos?characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;useUnicode=true&amp;useSSL=false&amp;serverTimezone=UTC</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">db.user.0</span><span style="color:#f92672">=</span><span style="color:#e6db74">username</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">db.password.0</span><span style="color:#f92672">=</span><span style="color:#e6db74">password</span>
+</span></span></code></pre></div><p>然后使用mysql-schema.sql脚本自动新建数据库</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

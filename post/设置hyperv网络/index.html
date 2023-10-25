@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-cn">
+  <head>
+    <title>windows设置hyper-v虚拟机网络 // LQY的备忘录</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.119.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="LQY" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.ead1f6492242b7d93618e6840b25260f8ea1ca68dc04cc9cf1b88adcb996693b.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="windows设置hyper-v虚拟机网络"/>
+<meta name="twitter:description" content="设置hyper-v网络 创建网络交换机，选择内部网络
+以Ubuntu为例，在编辑网络设置
+sudo vi /etc/netplan/00-installer-config.yaml 设置网络配置
+network: ethernets: eth0: dhcp4: false addresses: [192.168.137.10/24] ##网络地址 routes: - to: default via: 192.168.137.1 ##网关 optional: true nameservers: addresses: [223.5.5.5,119.29.29.29] ##DNS解析服务器 version: 2 应用网络配置
+sudo netplan apply 查看网络配置是否成功
+ip addr 要使虚拟机访问外部网络，需要开启网卡中的网络共享功能"/>
+
+    <meta property="og:title" content="windows设置hyper-v虚拟机网络" />
+<meta property="og:description" content="设置hyper-v网络 创建网络交换机，选择内部网络
+以Ubuntu为例，在编辑网络设置
+sudo vi /etc/netplan/00-installer-config.yaml 设置网络配置
+network: ethernets: eth0: dhcp4: false addresses: [192.168.137.10/24] ##网络地址 routes: - to: default via: 192.168.137.1 ##网关 optional: true nameservers: addresses: [223.5.5.5,119.29.29.29] ##DNS解析服务器 version: 2 应用网络配置
+sudo netplan apply 查看网络配置是否成功
+ip addr 要使虚拟机访问外部网络，需要开启网卡中的网络共享功能" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lyfantasy.github.io/post/%E8%AE%BE%E7%BD%AEhyperv%E7%BD%91%E7%BB%9C/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-08-18T15:40:51+08:00" />
+<meta property="article:modified_time" content="2023-08-18T15:40:51+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://lyfantasy.github.io/"><img class="app-header-avatar" src="/images/03.jpg" alt="LQY" /></a>
+      <span class="app-header-title">LQY的备忘录</span>
+      <p>关山难越，谁悲失路之人；萍水相逢，尽是他乡之客。</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/lyfantasy" target="_blank" rel="noreferrer noopener me">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>Github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">windows设置hyper-v虚拟机网络</h1>
+      <div class="post-meta">
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Aug 18, 2023
+        </div>
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h3 id="设置hyper-v网络">设置hyper-v网络</h3>
+<p>创建网络交换机，选择内部网络</p>
+<p>以Ubuntu为例，在编辑网络设置</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo vi /etc/netplan/00-installer-config.yaml
+</span></span></code></pre></div><p>设置网络配置</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>network:
+</span></span><span style="display:flex;"><span>  ethernets:
+</span></span><span style="display:flex;"><span>    eth0:
+</span></span><span style="display:flex;"><span>      dhcp4: false
+</span></span><span style="display:flex;"><span>      addresses: <span style="color:#f92672">[</span>192.168.137.10/24<span style="color:#f92672">]</span> <span style="color:#75715e">##网络地址</span>
+</span></span><span style="display:flex;"><span>      routes:
+</span></span><span style="display:flex;"><span>        - to: default
+</span></span><span style="display:flex;"><span>          via: 192.168.137.1 <span style="color:#75715e">##网关</span>
+</span></span><span style="display:flex;"><span>      optional: true
+</span></span><span style="display:flex;"><span>      nameservers:
+</span></span><span style="display:flex;"><span>        addresses: <span style="color:#f92672">[</span>223.5.5.5,119.29.29.29<span style="color:#f92672">]</span> <span style="color:#75715e">##DNS解析服务器</span>
+</span></span><span style="display:flex;"><span>  version: <span style="color:#ae81ff">2</span>
+</span></span></code></pre></div><p>应用网络配置</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo netplan apply
+</span></span></code></pre></div><p>查看网络配置是否成功</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>ip addr
+</span></span></code></pre></div><p>要使虚拟机访问外部网络，需要开启网卡中的网络共享功能</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

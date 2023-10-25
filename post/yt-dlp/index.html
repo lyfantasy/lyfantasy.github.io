@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-cn">
+  <head>
+    <title>使用yt-dlp下载视频 // LQY的备忘录</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.119.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="LQY" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.ead1f6492242b7d93618e6840b25260f8ea1ca68dc04cc9cf1b88adcb996693b.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用yt-dlp下载视频"/>
+<meta name="twitter:description" content="yt-dlp使用 环境依赖 ffmpeg
+下载视频 1.显示下载列表
+yt-dlp -F url 2.选择下载序号组合
+yt-dlp -f video_num&#43;aideo_num url 使用cookie下载b站视频 1.添加参数
+yt-dlp.exe --cookies-from-browser cookies-url -F video-url ##cookies-url 替换为浏览器cookie地址 ##video-url 替换为视频地址 ##以chrome为例(windows)，chrome:&#34;C:\Users\luo\AppData\Local\Google\Chrome\User Data\Default&#34; ##其他浏览器，如firefox，firefox:&#34;C:\Users\luo\AppData\Roaming\Mozilla\Firefox\Profiles\rlzlxs0i.default-release&#34; "/>
+
+    <meta property="og:title" content="使用yt-dlp下载视频" />
+<meta property="og:description" content="yt-dlp使用 环境依赖 ffmpeg
+下载视频 1.显示下载列表
+yt-dlp -F url 2.选择下载序号组合
+yt-dlp -f video_num&#43;aideo_num url 使用cookie下载b站视频 1.添加参数
+yt-dlp.exe --cookies-from-browser cookies-url -F video-url ##cookies-url 替换为浏览器cookie地址 ##video-url 替换为视频地址 ##以chrome为例(windows)，chrome:&#34;C:\Users\luo\AppData\Local\Google\Chrome\User Data\Default&#34; ##其他浏览器，如firefox，firefox:&#34;C:\Users\luo\AppData\Roaming\Mozilla\Firefox\Profiles\rlzlxs0i.default-release&#34; " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lyfantasy.github.io/post/yt-dlp/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-10-18T10:19:23+08:00" />
+<meta property="article:modified_time" content="2023-10-18T10:19:23+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://lyfantasy.github.io/"><img class="app-header-avatar" src="/images/03.jpg" alt="LQY" /></a>
+      <span class="app-header-title">LQY的备忘录</span>
+      <p>关山难越，谁悲失路之人；萍水相逢，尽是他乡之客。</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/lyfantasy" target="_blank" rel="noreferrer noopener me">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>Github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">使用yt-dlp下载视频</h1>
+      <div class="post-meta">
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Oct 18, 2023
+        </div>
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="yt-dlp使用">yt-dlp使用</h1>
+<h2 id="环境依赖">环境依赖</h2>
+<p>ffmpeg</p>
+<h2 id="下载视频">下载视频</h2>
+<p>1.显示下载列表</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>yt-dlp -F url
+</span></span></code></pre></div><p>2.选择下载序号组合</p>
+<pre tabindex="0"><code>yt-dlp -f video_num+aideo_num url
+</code></pre><h2 id="使用cookie下载b站视频">使用cookie下载b站视频</h2>
+<p>1.添加参数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>yt-dlp.exe --cookies-from-browser cookies-url -F video-url
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##cookies-url 替换为浏览器cookie地址</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##video-url 替换为视频地址</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##以chrome为例(windows)，chrome:&#34;C:\Users\luo\AppData\Local\Google\Chrome\User Data\Default&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##其他浏览器，如firefox，firefox:&#34;C:\Users\luo\AppData\Roaming\Mozilla\Firefox\Profiles\rlzlxs0i.default-release&#34;</span>
+</span></span></code></pre></div>
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="zh-cn">
+  <head>
+    <title>MySQL函数 // LQY的备忘录</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.119.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="LQY" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.ead1f6492242b7d93618e6840b25260f8ea1ca68dc04cc9cf1b88adcb996693b.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MySQL函数"/>
+<meta name="twitter:description" content="MySQL函数 数值函数 函数 作用 ABS(x) 返回x绝对值 SIGN(x) 返回x的符号。正数返回1，负数返回-1，0返回0 PI() 返回圆周率的值 CEIL(x),CEILING(x) 返回大于或者等于某个值的最小整数 FLOOR(x) 返回小于或者等于某个值的最大整数 LEAST(x1,x2,x3,&hellip;) 返回列表中的最小值 GREATEST(x1,x2,x3&hellip;) 返回列表中的最大值 MOD(x,y) 返回x/y的余数 RAND() 返回0~1的随机值 RAND(x) 返回0~1的随机值，x用作种子值，当x相同时，返回的值相同 ROUND(x) 对一个数值进行四舍五入后进行取整 ROUND(x,y) 对一个数值进行四舍五入后进行取整，然后保留到小数点后y位 TRUNCATE(x,y) 返回x截断为y位小数的结果 SQRT(x) 返回x的平方根，当x为负时，返回NULL 指数与对数 函数 作用 POW(x,y) 返回x的y次方 EXP(x) 返回e的x次方 LN(x) 返回以e为底，x的对数 LOG10(x) 返回以10为底，x的对数 LOG2(x) 返回以2为底x的对数 进制转换 函数 作用 BIN(x) 返回x的二进制数 HEX(x) 返回x的16进制数 OCT(x) 返回x的8进制数 CONV(x,f1,f2) 将f1进制的数转化为f2进制的数 字符串函数 函数 作用 ASCII(s) 返回字符串第一个字符的ascii码 char_length(s) 返回字符串的字符数 LENGTH(s) 返回字符串的字符数 CONTACT(s1,s2,s3..) 字符串拼接 CONRTACT_WS(x,s1,s2,s3..) 拼接字符串并在中间加上x INSERT(str,idx,len,replacestr) 将字符串str从idx位置开始，len长度的字符串替换为replacestr REPLACE(str,a,b) 用字符串b替换所有出现在字符串str中的a UPER(s) 将字符串s的所有字母转换为大写字母 LOWER(s) 将字符串s的所有字母转换为小写字母 LEFT(str,n) 返回字符串最左边的n个字符 RIGHT(str,n) 返回字符串右边的n个字符 LPAD(str,len,pad) 用字符串pad对str最左边进行填充，直到str的长度为len RPAD(str,len,pad) 用字符串pad对str最右边进行填充，直到str的长度为len LTRIM(s) 去掉字符串左侧的空格 RTRIM(s) 去掉字符串右侧的空格 TRIM(s) 去掉字符串s开始与结尾的空格 TRIM(s1 FROM s) 去掉s开始与结尾的s1 TRIM(LEADING s1 FROM s) 去掉s开始处的s1 TRIM(TRAILING s1 FROM s) 去掉s结尾处的s1 REPEAT(str,n) 返回str重复n次的结果 SPACE(n) 返回n个空格 日期与时间 函数 作用 CURDATE() 返回当前日期 CURTIME() 返回当前时间 NOW() 返回当前日期和时间 常用聚合函数 函数 作用 AVG() 计算某一平均数 SUM() 计算某一字段的总数 MAX() 某一字段中的最大值 MIN() 某一字段中的最小值 COUNT() 计算某一字段在查询结果中出现的个数（不计算NULL值），使用MyISAM引擎时三者效率相同，使用InnoDB时，count(*)=count(1)&gt;count(字段) GROUP BY 先按照条件进行分组，然后在分别进行查询。 # with rollup整体看作一组计算一次 select table_list from table_name where param_list group by table_list; # with rollup; "/>
+
+    <meta property="og:title" content="MySQL函数" />
+<meta property="og:description" content="MySQL函数 数值函数 函数 作用 ABS(x) 返回x绝对值 SIGN(x) 返回x的符号。正数返回1，负数返回-1，0返回0 PI() 返回圆周率的值 CEIL(x),CEILING(x) 返回大于或者等于某个值的最小整数 FLOOR(x) 返回小于或者等于某个值的最大整数 LEAST(x1,x2,x3,&hellip;) 返回列表中的最小值 GREATEST(x1,x2,x3&hellip;) 返回列表中的最大值 MOD(x,y) 返回x/y的余数 RAND() 返回0~1的随机值 RAND(x) 返回0~1的随机值，x用作种子值，当x相同时，返回的值相同 ROUND(x) 对一个数值进行四舍五入后进行取整 ROUND(x,y) 对一个数值进行四舍五入后进行取整，然后保留到小数点后y位 TRUNCATE(x,y) 返回x截断为y位小数的结果 SQRT(x) 返回x的平方根，当x为负时，返回NULL 指数与对数 函数 作用 POW(x,y) 返回x的y次方 EXP(x) 返回e的x次方 LN(x) 返回以e为底，x的对数 LOG10(x) 返回以10为底，x的对数 LOG2(x) 返回以2为底x的对数 进制转换 函数 作用 BIN(x) 返回x的二进制数 HEX(x) 返回x的16进制数 OCT(x) 返回x的8进制数 CONV(x,f1,f2) 将f1进制的数转化为f2进制的数 字符串函数 函数 作用 ASCII(s) 返回字符串第一个字符的ascii码 char_length(s) 返回字符串的字符数 LENGTH(s) 返回字符串的字符数 CONTACT(s1,s2,s3..) 字符串拼接 CONRTACT_WS(x,s1,s2,s3..) 拼接字符串并在中间加上x INSERT(str,idx,len,replacestr) 将字符串str从idx位置开始，len长度的字符串替换为replacestr REPLACE(str,a,b) 用字符串b替换所有出现在字符串str中的a UPER(s) 将字符串s的所有字母转换为大写字母 LOWER(s) 将字符串s的所有字母转换为小写字母 LEFT(str,n) 返回字符串最左边的n个字符 RIGHT(str,n) 返回字符串右边的n个字符 LPAD(str,len,pad) 用字符串pad对str最左边进行填充，直到str的长度为len RPAD(str,len,pad) 用字符串pad对str最右边进行填充，直到str的长度为len LTRIM(s) 去掉字符串左侧的空格 RTRIM(s) 去掉字符串右侧的空格 TRIM(s) 去掉字符串s开始与结尾的空格 TRIM(s1 FROM s) 去掉s开始与结尾的s1 TRIM(LEADING s1 FROM s) 去掉s开始处的s1 TRIM(TRAILING s1 FROM s) 去掉s结尾处的s1 REPEAT(str,n) 返回str重复n次的结果 SPACE(n) 返回n个空格 日期与时间 函数 作用 CURDATE() 返回当前日期 CURTIME() 返回当前时间 NOW() 返回当前日期和时间 常用聚合函数 函数 作用 AVG() 计算某一平均数 SUM() 计算某一字段的总数 MAX() 某一字段中的最大值 MIN() 某一字段中的最小值 COUNT() 计算某一字段在查询结果中出现的个数（不计算NULL值），使用MyISAM引擎时三者效率相同，使用InnoDB时，count(*)=count(1)&gt;count(字段) GROUP BY 先按照条件进行分组，然后在分别进行查询。 # with rollup整体看作一组计算一次 select table_list from table_name where param_list group by table_list; # with rollup; " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lyfantasy.github.io/post/mysql%E5%87%BD%E6%95%B0/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-03-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-03-17T00:00:00+00:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://lyfantasy.github.io/"><img class="app-header-avatar" src="/images/03.jpg" alt="LQY" /></a>
+      <span class="app-header-title">LQY的备忘录</span>
+      <p>关山难越，谁悲失路之人；萍水相逢，尽是他乡之客。</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/lyfantasy" target="_blank" rel="noreferrer noopener me">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>Github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">MySQL函数</h1>
+      <div class="post-meta">
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Mar 17, 2023
+        </div>
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h2 id="mysql函数">MySQL函数</h2>
+<h3 id="数值函数">数值函数</h3>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ABS(x)</td>
+<td>返回x绝对值</td>
+</tr>
+<tr>
+<td>SIGN(x)</td>
+<td>返回x的符号。正数返回1，负数返回-1，0返回0</td>
+</tr>
+<tr>
+<td>PI()</td>
+<td>返回圆周率的值</td>
+</tr>
+<tr>
+<td>CEIL(x),CEILING(x)</td>
+<td>返回大于或者等于某个值的最小整数</td>
+</tr>
+<tr>
+<td>FLOOR(x)</td>
+<td>返回小于或者等于某个值的最大整数</td>
+</tr>
+<tr>
+<td>LEAST(x1,x2,x3,&hellip;)</td>
+<td>返回列表中的最小值</td>
+</tr>
+<tr>
+<td>GREATEST(x1,x2,x3&hellip;)</td>
+<td>返回列表中的最大值</td>
+</tr>
+<tr>
+<td>MOD(x,y)</td>
+<td>返回x/y的余数</td>
+</tr>
+<tr>
+<td>RAND()</td>
+<td>返回0~1的随机值</td>
+</tr>
+<tr>
+<td>RAND(x)</td>
+<td>返回0~1的随机值，x用作种子值，当x相同时，返回的值相同</td>
+</tr>
+<tr>
+<td>ROUND(x)</td>
+<td>对一个数值进行四舍五入后进行取整</td>
+</tr>
+<tr>
+<td>ROUND(x,y)</td>
+<td>对一个数值进行四舍五入后进行取整，然后保留到小数点后y位</td>
+</tr>
+<tr>
+<td>TRUNCATE(x,y)</td>
+<td>返回x截断为y位小数的结果</td>
+</tr>
+<tr>
+<td>SQRT(x)</td>
+<td>返回x的平方根，当x为负时，返回NULL</td>
+</tr>
+</tbody>
+</table>
+<h4 id="指数与对数">指数与对数</h4>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POW(x,y)</td>
+<td>返回x的y次方</td>
+</tr>
+<tr>
+<td>EXP(x)</td>
+<td>返回e的x次方</td>
+</tr>
+<tr>
+<td>LN(x)</td>
+<td>返回以e为底，x的对数</td>
+</tr>
+<tr>
+<td>LOG10(x)</td>
+<td>返回以10为底，x的对数</td>
+</tr>
+<tr>
+<td>LOG2(x)</td>
+<td>返回以2为底x的对数</td>
+</tr>
+</tbody>
+</table>
+<h4 id="进制转换">进制转换</h4>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BIN(x)</td>
+<td>返回x的二进制数</td>
+</tr>
+<tr>
+<td>HEX(x)</td>
+<td>返回x的16进制数</td>
+</tr>
+<tr>
+<td>OCT(x)</td>
+<td>返回x的8进制数</td>
+</tr>
+<tr>
+<td>CONV(x,f1,f2)</td>
+<td>将f1进制的数转化为f2进制的数</td>
+</tr>
+</tbody>
+</table>
+<h3 id="字符串函数">字符串函数</h3>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ASCII(s)</td>
+<td>返回字符串第一个字符的ascii码</td>
+</tr>
+<tr>
+<td>char_length(s)</td>
+<td>返回字符串的字符数</td>
+</tr>
+<tr>
+<td>LENGTH(s)</td>
+<td>返回字符串的字符数</td>
+</tr>
+<tr>
+<td>CONTACT(s1,s2,s3..)</td>
+<td>字符串拼接</td>
+</tr>
+<tr>
+<td>CONRTACT_WS(x,s1,s2,s3..)</td>
+<td>拼接字符串并在中间加上x</td>
+</tr>
+<tr>
+<td>INSERT(str,idx,len,replacestr)</td>
+<td>将字符串str从idx位置开始，len长度的字符串替换为replacestr</td>
+</tr>
+<tr>
+<td>REPLACE(str,a,b)</td>
+<td>用字符串b替换所有出现在字符串str中的a</td>
+</tr>
+<tr>
+<td>UPER(s)</td>
+<td>将字符串s的所有字母转换为大写字母</td>
+</tr>
+<tr>
+<td>LOWER(s)</td>
+<td>将字符串s的所有字母转换为小写字母</td>
+</tr>
+<tr>
+<td>LEFT(str,n)</td>
+<td>返回字符串最左边的n个字符</td>
+</tr>
+<tr>
+<td>RIGHT(str,n)</td>
+<td>返回字符串右边的n个字符</td>
+</tr>
+<tr>
+<td>LPAD(str,len,pad)</td>
+<td>用字符串pad对str最左边进行填充，直到str的长度为len</td>
+</tr>
+<tr>
+<td>RPAD(str,len,pad)</td>
+<td>用字符串pad对str最右边进行填充，直到str的长度为len</td>
+</tr>
+<tr>
+<td>LTRIM(s)</td>
+<td>去掉字符串左侧的空格</td>
+</tr>
+<tr>
+<td>RTRIM(s)</td>
+<td>去掉字符串右侧的空格</td>
+</tr>
+<tr>
+<td>TRIM(s)</td>
+<td>去掉字符串s开始与结尾的空格</td>
+</tr>
+<tr>
+<td>TRIM(s1 FROM s)</td>
+<td>去掉s开始与结尾的s1</td>
+</tr>
+<tr>
+<td>TRIM(LEADING s1 FROM s)</td>
+<td>去掉s开始处的s1</td>
+</tr>
+<tr>
+<td>TRIM(TRAILING s1 FROM s)</td>
+<td>去掉s结尾处的s1</td>
+</tr>
+<tr>
+<td>REPEAT(str,n)</td>
+<td>返回str重复n次的结果</td>
+</tr>
+<tr>
+<td>SPACE(n)</td>
+<td>返回n个空格</td>
+</tr>
+</tbody>
+</table>
+<h3 id="日期与时间">日期与时间</h3>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CURDATE()</td>
+<td>返回当前日期</td>
+</tr>
+<tr>
+<td>CURTIME()</td>
+<td>返回当前时间</td>
+</tr>
+<tr>
+<td>NOW()</td>
+<td>返回当前日期和时间</td>
+</tr>
+</tbody>
+</table>
+<h3 id="常用聚合函数">常用聚合函数</h3>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AVG()</td>
+<td>计算某一平均数</td>
+</tr>
+<tr>
+<td>SUM()</td>
+<td>计算某一字段的总数</td>
+</tr>
+<tr>
+<td>MAX()</td>
+<td>某一字段中的最大值</td>
+</tr>
+<tr>
+<td>MIN()</td>
+<td>某一字段中的最小值</td>
+</tr>
+<tr>
+<td>COUNT()</td>
+<td>计算某一字段在查询结果中出现的个数（不计算NULL值），使用MyISAM引擎时三者效率相同，使用InnoDB时，count(*)=count(1)&gt;count(字段)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>GROUP BY
+先按照条件进行分组，然后在分别进行查询。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#f92672">#</span> <span style="color:#66d9ef">with</span> rollup整体看作一组计算一次
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> table_list 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> <span style="color:#66d9ef">table_name</span> 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> param_list 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> table_list;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">#</span> <span style="color:#66d9ef">with</span> <span style="color:#66d9ef">rollup</span>;
+</span></span></code></pre></div>
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

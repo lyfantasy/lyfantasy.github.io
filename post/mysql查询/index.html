@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="zh-cn">
+  <head>
+    <title>select基本查询 // LQY的备忘录</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.119.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="LQY" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.ead1f6492242b7d93618e6840b25260f8ea1ca68dc04cc9cf1b88adcb996693b.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="select基本查询"/>
+<meta name="twitter:description" content="select语句 基本语句 select * from table_name; 去重语句 distinct去掉重复的结果 select distinct user_role from user; 别名as或者使用空格 select user_role as u_role from user; select user_role u_role from user; 空值参与运算 1.空值 NULL 2.空值不等于0，&rsquo;&rsquo;,&rsquo;null&rsquo; 3.空值参与运算，结果也一定为空
+着重号 着重号用以区分关键字和字段。
+select * from &#39;order&#39;; 显示表结构 describe table_name; where进行过滤 select * from user where list_name = &#39;value&#39;; 运算符 排序与分页 排序顺序
+1.asc(升序排序) 2.desc(降序排序) 默认按照升序排序
+select * from user order by user_salary desc; 二级排序 先按照以及排序，当一级排序后存在相同的结果时，按照二级进行排序 select * from user order by user_salary desc , user_num asc; 分页 使用limit关键字进行分页limit(偏移量,条目数) # 查询20条数据，偏移量20，即查询20到40这一段数据 select * from user limit 20,20; 多表查询 内连接 查询交集部分 select u."/>
+
+    <meta property="og:title" content="select基本查询" />
+<meta property="og:description" content="select语句 基本语句 select * from table_name; 去重语句 distinct去掉重复的结果 select distinct user_role from user; 别名as或者使用空格 select user_role as u_role from user; select user_role u_role from user; 空值参与运算 1.空值 NULL 2.空值不等于0，&rsquo;&rsquo;,&rsquo;null&rsquo; 3.空值参与运算，结果也一定为空
+着重号 着重号用以区分关键字和字段。
+select * from &#39;order&#39;; 显示表结构 describe table_name; where进行过滤 select * from user where list_name = &#39;value&#39;; 运算符 排序与分页 排序顺序
+1.asc(升序排序) 2.desc(降序排序) 默认按照升序排序
+select * from user order by user_salary desc; 二级排序 先按照以及排序，当一级排序后存在相同的结果时，按照二级进行排序 select * from user order by user_salary desc , user_num asc; 分页 使用limit关键字进行分页limit(偏移量,条目数) # 查询20条数据，偏移量20，即查询20到40这一段数据 select * from user limit 20,20; 多表查询 内连接 查询交集部分 select u." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lyfantasy.github.io/post/mysql%E6%9F%A5%E8%AF%A2/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-03-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-03-18T00:00:00+00:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://lyfantasy.github.io/"><img class="app-header-avatar" src="/images/03.jpg" alt="LQY" /></a>
+      <span class="app-header-title">LQY的备忘录</span>
+      <p>关山难越，谁悲失路之人；萍水相逢，尽是他乡之客。</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/lyfantasy" target="_blank" rel="noreferrer noopener me">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>Github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">select基本查询</h1>
+      <div class="post-meta">
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Mar 18, 2023
+        </div>
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h2 id="select语句">select语句</h2>
+<h3 id="基本语句">基本语句</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">table_name</span>;
+</span></span></code></pre></div><ul>
+<li>去重语句
+distinct去掉重复的结果</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#66d9ef">distinct</span> user_role <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">user</span>; 
+</span></span></code></pre></div><ul>
+<li>别名as或者使用空格</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> user_role <span style="color:#66d9ef">as</span> u_role <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">user</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> user_role u_role <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">user</span>;
+</span></span></code></pre></div><ul>
+<li>
+<p>空值参与运算
+1.空值 NULL
+2.空值不等于0，&rsquo;&rsquo;,&rsquo;null&rsquo;
+3.空值参与运算，结果也一定为空</p>
+</li>
+<li>
+<p>着重号
+着重号用以区分关键字和字段。</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;order&#39;</span>;
+</span></span></code></pre></div><ul>
+<li>显示表结构</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">describe</span> <span style="color:#66d9ef">table_name</span>;
+</span></span></code></pre></div><h3 id="where进行过滤">where进行过滤</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">where</span> list_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;value&#39;</span>;
+</span></span></code></pre></div><h2 id="运算符">运算符</h2>
+<h2 id="排序与分页">排序与分页</h2>
+<ul>
+<li>
+<p>排序顺序</p>
+<p>1.asc(升序排序)
+2.desc(降序排序)
+默认按照升序排序</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> user_salary <span style="color:#66d9ef">desc</span>; 
+</span></span></code></pre></div><ul>
+<li>二级排序
+先按照以及排序，当一级排序后存在相同的结果时，按照二级进行排序</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> user_salary <span style="color:#66d9ef">desc</span> , user_num <span style="color:#66d9ef">asc</span>;
+</span></span></code></pre></div><ul>
+<li>分页
+使用limit关键字进行分页limit(偏移量,条目数)</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#f92672">#</span> <span style="color:#960050;background-color:#1e0010">查询</span><span style="color:#ae81ff">20</span><span style="color:#960050;background-color:#1e0010">条数据，偏移量</span><span style="color:#ae81ff">20</span><span style="color:#960050;background-color:#1e0010">，即查询</span><span style="color:#ae81ff">20</span><span style="color:#960050;background-color:#1e0010">到</span><span style="color:#ae81ff">40</span><span style="color:#960050;background-color:#1e0010">这一段数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">20</span>,<span style="color:#ae81ff">20</span>;
+</span></span></code></pre></div><h2 id="多表查询">多表查询</h2>
+<ul>
+<li>内连接
+查询交集部分</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> u.user_name,a.item_address
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> <span style="color:#66d9ef">user</span> u <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> item a 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">on</span> u.user_item_id <span style="color:#f92672">=</span> a.item_id;
+</span></span></code></pre></div><ul>
+<li>左外连接
+查询左边的全部和与右边的交集部分</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> u.user_name,a.item_address
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> <span style="color:#66d9ef">user</span> u <span style="color:#66d9ef">left</span> <span style="color:#66d9ef">outer</span> <span style="color:#66d9ef">join</span> item a 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">on</span> u.user_item_id <span style="color:#f92672">=</span> a.item_id;
+</span></span></code></pre></div><ul>
+<li>右外连接
+查询右边全部和与左边的交集部分</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> u.user_name,a.item_address
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> <span style="color:#66d9ef">user</span> u <span style="color:#66d9ef">right</span> <span style="color:#66d9ef">outer</span> <span style="color:#66d9ef">join</span> item a 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">on</span> u.user_item_id <span style="color:#f92672">=</span> a.item_id;
+</span></span></code></pre></div><ul>
+<li>联合查询
+将两次查询的结果拼成一个结果集</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#f92672">#</span><span style="color:#960050;background-color:#1e0010">全外查询</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> table_list 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> table_a <span style="color:#66d9ef">full</span> <span style="color:#66d9ef">outer</span> <span style="color:#66d9ef">join</span> table_b 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">on</span> table_a.param <span style="color:#f92672">=</span> table_b.param;
+</span></span></code></pre></div><ul>
+<li>自然连接
+查询两张表中的相同字段，然后自动连接，相当于等值连接</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> table_list 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> table_a <span style="color:#66d9ef">natural</span> <span style="color:#66d9ef">join</span> table_b;
+</span></span></code></pre></div><ul>
+<li>using关键字
+自动查询using关键字后面两表之间相同的关键字，然后进行连接。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#f92672">#</span><span style="color:#960050;background-color:#1e0010">查询两表中的</span>user_item_id<span style="color:#960050;background-color:#1e0010">，然后进行连接</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> table_list
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> table_a <span style="color:#66d9ef">join</span> table_b
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span>(user_item_id);
+</span></span></code></pre></div><h2 id="子查询">子查询</h2>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

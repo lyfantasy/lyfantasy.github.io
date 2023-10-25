@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="zh-cn">
+  <head>
+    <title>RabbitMQ消息队列 // LQY的备忘录</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.119.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="LQY" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.ead1f6492242b7d93618e6840b25260f8ea1ca68dc04cc9cf1b88adcb996693b.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="RabbitMQ消息队列"/>
+<meta name="twitter:description" content="RabbitMQ消息队列 1,什么是RabbitMQ? RabbitMQ是一种消息队列，目的是为了缓解和分发处理服务器接受到的消息和请求
+2,在docker中运行rabbitMQ 拉取镜像
+docker pull rabbitmq:&lt;version&gt; 运行镜像
+docker run -itd --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:&lt;version&gt; 支持环境变量，具体参考文档：环境变量
+3,spring-amqp sprinng-amqp默认实现了rabbitMQ的消息队列
+在spring项目中引入依赖
+&lt;!--版本3.1.4--&gt; &lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-starter-amqp&lt;/artifactId&gt; &lt;/dependency&gt; 2.1,发送消息 @Autowired private RabbitTemplate template; @Test void test() { String queueName = &#34;queue1&#34;; for (int i = 1; i &lt;= 50; i&#43;&#43;) { template.convertAndSend(queueName, &#34;this is msg &#43;&#43;&#43;&#34; &#43; i); } System.out.println(); } 2.2,接收消息 @Component public class MQListener { //该方法参数即为接受的消息,默认为object,会自动转换 @RabbitListener(queue = &#34;queue1&#34;) void getMsg(String str) { System."/>
+
+    <meta property="og:title" content="RabbitMQ消息队列" />
+<meta property="og:description" content="RabbitMQ消息队列 1,什么是RabbitMQ? RabbitMQ是一种消息队列，目的是为了缓解和分发处理服务器接受到的消息和请求
+2,在docker中运行rabbitMQ 拉取镜像
+docker pull rabbitmq:&lt;version&gt; 运行镜像
+docker run -itd --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:&lt;version&gt; 支持环境变量，具体参考文档：环境变量
+3,spring-amqp sprinng-amqp默认实现了rabbitMQ的消息队列
+在spring项目中引入依赖
+&lt;!--版本3.1.4--&gt; &lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-starter-amqp&lt;/artifactId&gt; &lt;/dependency&gt; 2.1,发送消息 @Autowired private RabbitTemplate template; @Test void test() { String queueName = &#34;queue1&#34;; for (int i = 1; i &lt;= 50; i&#43;&#43;) { template.convertAndSend(queueName, &#34;this is msg &#43;&#43;&#43;&#34; &#43; i); } System.out.println(); } 2.2,接收消息 @Component public class MQListener { //该方法参数即为接受的消息,默认为object,会自动转换 @RabbitListener(queue = &#34;queue1&#34;) void getMsg(String str) { System." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lyfantasy.github.io/post/rabbitmq/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-10-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-10-12T00:00:00+00:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://lyfantasy.github.io/"><img class="app-header-avatar" src="/images/03.jpg" alt="LQY" /></a>
+      <span class="app-header-title">LQY的备忘录</span>
+      <p>关山难越，谁悲失路之人；萍水相逢，尽是他乡之客。</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/lyfantasy" target="_blank" rel="noreferrer noopener me">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>Github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">RabbitMQ消息队列</h1>
+      <div class="post-meta">
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Oct 12, 2023
+        </div>
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          2 min read
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="rabbitmq消息队列">RabbitMQ消息队列</h1>
+<h2 id="1什么是rabbitmq">1,什么是RabbitMQ?</h2>
+<p>RabbitMQ是一种消息队列，目的是为了缓解和分发处理服务器接受到的消息和请求</p>
+<h2 id="2在docker中运行rabbitmq">2,在docker中运行rabbitMQ</h2>
+<p>拉取镜像</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>docker pull rabbitmq:&lt;version&gt;
+</span></span></code></pre></div><p>运行镜像</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>docker run -itd --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:&lt;version&gt;
+</span></span></code></pre></div><p>支持环境变量，具体参考文档：<a href="https://www.rabbitmq.com/configure.html#supported-environment-variables">环境变量</a></p>
+<h2 id="3spring-amqp">3,spring-amqp</h2>
+<p>sprinng-amqp默认实现了rabbitMQ的消息队列</p>
+<p>在spring项目中引入依赖</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;!--版本3.1.4--&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;dependency&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;groupId&gt;</span>org.springframework.boot<span style="color:#f92672">&lt;/groupId&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;artifactId&gt;</span>spring-boot-starter-amqp<span style="color:#f92672">&lt;/artifactId&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/dependency&gt;</span>
+</span></span></code></pre></div><h3 id="21发送消息">2.1,发送消息</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Autowired</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> RabbitTemplate template<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Test</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">test</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    String queueName <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;queue1&#34;</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">50</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        template<span style="color:#f92672">.</span><span style="color:#a6e22e">convertAndSend</span><span style="color:#f92672">(</span>queueName<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;this is msg +++&#34;</span> <span style="color:#f92672">+</span> i<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="22接收消息">2.2,接收消息</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Component</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MQListener</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//该方法参数即为接受的消息,默认为object,会自动转换
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">@RabbitListener</span><span style="color:#f92672">(</span>queue <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;queue1&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">getMsg</span><span style="color:#f92672">(</span>String str<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;收到消息：——————&#34;</span> <span style="color:#f92672">+</span> str<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="4交换机类型">4,交换机类型</h2>
+<h3 id="41fanout">4.1,fanout</h3>
+<p>即广播交换机，会将消息广播到所有绑定该交换机的队列上。</p>
+<h3 id="42direct">4.2,direct</h3>
+<p>将消息过呢据规则路由到指定的queue上，称为定向路由。</p>
+<ul>
+<li>消息队列和交换机之间设置有一个BindingKey.</li>
+<li>发布者发布消息时，指定RoutingKey</li>
+<li>交换机将消息路由到BindingKey和RoutingKey一致的消息队列</li>
+</ul>
+<!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">//测试direct交换机
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">@Test</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">test1</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>     String exchangeName <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;test.direct&#34;</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">5</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>         template<span style="color:#f92672">.</span><span style="color:#a6e22e">convertAndSend</span><span style="color:#f92672">(</span>exchangeName<span style="color:#f92672">,</span><span style="color:#e6db74">&#34;blue&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;this is msg +++&#34;</span> <span style="color:#f92672">+</span> i<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>     System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="43topic">4.3,topic</h3>
+<p>与direct类似，区别在于topic的routingKey可以是一串单词，比如china.news.shanghai</p>
+<p>使用通配符代指,</p>
+<ul>
+<li>#,代指0个或多个单词</li>
+<li>*，代指一个单词</li>
+</ul>
+<p>例如，china.*,china.#,#.china</p>
+<h2 id="5使用java代码添加队列和交换机">5,使用java代码添加队列和交换机</h2>
+<h3 id="51使用bean添加">5.1,使用bean添加</h3>
+<p>&hellip;</p>
+<h3 id="52使用注解添加">5.2,使用注解添加</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@RabbitListener</span><span style="color:#f92672">(</span>bindings <span style="color:#f92672">=</span> <span style="color:#a6e22e">@QueueBinding</span><span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>        value <span style="color:#f92672">=</span> <span style="color:#a6e22e">@Queue</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;direct.queue3&#34;</span><span style="color:#f92672">),</span>
+</span></span><span style="display:flex;"><span>        exchange <span style="color:#f92672">=</span> <span style="color:#a6e22e">@Exchange</span><span style="color:#f92672">(</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;test.direct2&#34;</span><span style="color:#f92672">,</span> type <span style="color:#f92672">=</span> ExchangeTypes<span style="color:#f92672">.</span><span style="color:#a6e22e">DIRECT</span><span style="color:#f92672">),</span>
+</span></span><span style="display:flex;"><span>        key <span style="color:#f92672">=</span> <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;key1&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;key2&#34;</span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">getMsg3</span><span style="color:#f92672">(</span>String str<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;direct.queue3收到消息：——————&#34;</span> <span style="color:#f92672">+</span> str<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="6消息确认">6,消息确认</h2>
+<h3 id="61生产者确认">6.1,生产者确认</h3>
+<p>1.使用<strong>returnCallback</strong>来确认<strong>消息是否传到了队列,在消息没有传到队列时触发</strong>，配置RabbitTemplate，用以处理所有确认回调</p>
+<p>配置文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">spring</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">rabbitmq</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">host</span>: <span style="color:#ae81ff">192.168.17.128</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">## 消息确认，类型</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">publisher-confirm-type</span>: <span style="color:#ae81ff">correlated</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">## 设置返回</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">publisher-returns</span>: <span style="color:#66d9ef">true</span>
+</span></span></code></pre></div><p>消息确认和异常处理代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Configuration</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MqConfirmConfig</span> <span style="color:#66d9ef">implements</span> ApplicationContextAware <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setApplicationContext</span><span style="color:#f92672">(</span>ApplicationContext applicationContext<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> BeansException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        RabbitTemplate rabbitTemplate <span style="color:#f92672">=</span> applicationContext<span style="color:#f92672">.</span><span style="color:#a6e22e">getBean</span><span style="color:#f92672">(</span>RabbitTemplate<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//配置回调
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">//处理异常
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        rabbitTemplate<span style="color:#f92672">.</span><span style="color:#a6e22e">setReturnsCallback</span><span style="color:#f92672">(</span>returnedMessage <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>returnedMessage<span style="color:#f92672">.</span><span style="color:#a6e22e">getMessage</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>returnedMessage<span style="color:#f92672">.</span><span style="color:#a6e22e">getExchange</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>returnedMessage<span style="color:#f92672">.</span><span style="color:#a6e22e">getReplyCode</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>returnedMessage<span style="color:#f92672">.</span><span style="color:#a6e22e">getReplyText</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>returnedMessage<span style="color:#f92672">.</span><span style="color:#a6e22e">getRoutingKey</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">});</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>2.使用<strong>ConfirmCallback</strong>，<strong>消息在发送到交换机时触发，无论是否接收成功</strong></p>
+<p>2.1,使用RabbitTemplate进行统一处理</p>
+<p>2.2,每次发送请求都单独处理确认</p>
+<h3 id="62消费者确认">6.2,消费者确认</h3>
+<blockquote>
+<p>消费者确认的三种机制：</p>
+<ol>
+<li>ack：消费者成功接收并处理了消息，队列删除消息</li>
+<li>nack：消费者处理消息出错，队列reload消息，然后重新发送给消费者</li>
+<li>reject：消息格式或者内容不符合消费者需求，消费者拒绝接收</li>
+</ol>
+</blockquote>
+<p>默认情况下，消息投递失败会不断重试，消耗性能，所以需要手动处理一下，rabbitMQ提供一种重试机制，如配置文件</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">spring</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">rabbitmq</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">host</span>: <span style="color:#ae81ff">192.168.17.128</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">listener</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">simple</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">##开启确认机制</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">acknowledge-mode</span>: <span style="color:#ae81ff">auto</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">##开启重试机制</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">retry</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">enabled</span>: <span style="color:#66d9ef">true</span>
+</span></span></code></pre></div><p>开启重试机制后，默认情况下重试三次后消息将会被丢弃，可以自己手动处理一下，实现MessageRecoverer类来手动处理消息</p>
+<p>MessageRecoverer有三种不同的实现：</p>
+<ol>
+<li>RejectAndDonotRequeueRecoverer：重试耗尽，直接reject，丢弃消息。这是默认实现</li>
+<li>ImmediateRequeueMessageRecoverer：重试耗尽后返回nack，消息重新入队。</li>
+<li>RepublishMessageRecoverer：重试耗尽后，将失败的消息投递到指定的交换机。</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Configuration</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//当某个属性配置为xx时生效(前缀，值)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">@ConditionalOnProperty</span><span style="color:#f92672">(</span>prefix <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;spring.listener.simple.retry&#34;</span><span style="color:#f92672">,</span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;enabled&#34;</span><span style="color:#f92672">,</span>havingValue <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MQConfig</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//返回一个MessageRecoverer，这是一个转发失败消息处理
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">@Bean</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> MessageRecoverer <span style="color:#a6e22e">messageRecoverer</span><span style="color:#f92672">(</span>RabbitTemplate rabbitTemplate<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//分别设置消息投递，交换机名称，队列
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> RepublishMessageRecoverer<span style="color:#f92672">(</span>rabbitTemplate<span style="color:#f92672">,</span><span style="color:#e6db74">&#34;error.exchange&#34;</span><span style="color:#f92672">,</span><span style="color:#e6db74">&#34;error.queue&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="7持久化">7,持久化</h2>
+<h3 id="71非持久化non_persistent">7.1,非持久化(non_persistent)</h3>
+<p>..</p>
+<h3 id="72持久化persisstent">7.2,持久化(persisstent)</h3>
+<p>..</p>
+<h3 id="73lazy-queue">7.3,lazy-queue</h3>
+<p>即惰性队列：</p>
+<ol>
+<li>收到消息后直接存入磁盘而非内存(内存只保留最近的2048条信息)</li>
+<li>消费者消费信息时才会从磁盘中读取信息</li>
+<li>支持数百万条的信息存储</li>
+</ol>
+<blockquote>
+<p>在3.12版本后，所有队列都是lazy_queue模式，无法更改。</p>
+</blockquote>
+<h2 id="8延迟消息">8,延迟消息</h2>
+<blockquote>
+<p>延迟消息，即消息在设定时间后延迟发送。</p>
+<p>应用场景，如订单生成后的倒计时付款</p>
+</blockquote>
+<h3 id="81死信交换机">8.1,死信交换机</h3>
+<blockquote>
+<p>根据rabbitMQ机制，设置了超时时间的消息，在超时后没有被消费，则可以设置进入死信交换机和队列。</p>
+<p>利用这个机制，对消息设置超时时间，然后消息写入死信队列，在到期后去取，这就模拟了延迟消息。</p>
+</blockquote>
+<p>![](D:\code\Notes\java\中间件\resource\rabbitMQ\屏幕截图 2023-10-18 191718.png)</p>
+<h3 id="82延迟消息插件">8.2,延迟消息插件</h3>
+<p>使用该插件后可以创建延迟消息交换机，交换机收到消息后，会在设定时间后将消息投递到队列。</p>
+<h4 id="821安装">8.2.1,安装</h4>
+<p>先下载rabbitmq_delayed_message_exchange插件，然后将插件移动到rabbitmq的插件目录&quot;/plugins&quot;。</p>
+<p>执行安装命令</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>docker exec -it rabbitmq_name rabbitmq-plugins enable rabbitmq_delayed_message_exchange
+</span></span></code></pre></div><h4 id="822代码">8.2.2,代码</h4>
+<p>设置交换机属性delayed = true</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Bean</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> DirectExchange <span style="color:#a6e22e">delayExchange</span><span style="color:#f92672">(){</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> ExchangeBuilder
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">.</span><span style="color:#a6e22e">directExchange</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;delay.direct&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">.</span><span style="color:#a6e22e">delayed</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>发送消息时，设置超时时间</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>messages<span style="color:#f92672">.</span><span style="color:#a6e22e">getMessageProperties</span><span style="color:#f92672">().</span><span style="color:#a6e22e">setDelay</span><span style="color:#f92672">(</span><span style="color:#ae81ff">5000</span><span style="color:#f92672">);</span><span style="color:#75715e">//设置超时时间
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">return</span> message<span style="color:#f92672">;</span> 	
+</span></span></code></pre></div><h3 id="83监听延迟消息">8.3,监听延迟消息</h3>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

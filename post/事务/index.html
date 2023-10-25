@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-cn">
+  <head>
+    <title>事务的特性 // LQY的备忘录</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.119.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="LQY" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.ead1f6492242b7d93618e6840b25260f8ea1ca68dc04cc9cf1b88adcb996693b.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="事务的特性"/>
+<meta name="twitter:description" content="MySQL事务 1,事务的四大特性 四大特性即：
+原子性：一组操作封装为一个执行单元，该组操作指令只能同时成功或者同时失败。 一致性：事务执行前后数据的状态和合法性是一致的。 隔离性：事务之间具有隔离性，根据个隔离级别确定影响的大小。 持久性：事务执行完毕后，数据会被永久改变，持久化到磁盘上。 2,事务的隔离级别 事务之间的执行具有四种影响的现象，由低到高依次排列为：
+脏写：事务a修改了事务b修改了但未提交的数值，事务a回滚，导致事务b写入的数值丢失。 脏读：读取到别的事务写入的临时数据，事务回滚了，数值丢失。 不可重复读：读取到的数据被其他事务修改了，再次读取时数据不一致。 幻读：事务读取到了其他事务提交的临时数据，下次再次读取时，事务回滚了，之前读取的数据不存在了。 MySQL对此的解决方案，设置隔离级别，分别为：
+隔离级别 解决问题 锁 读未提交(READ UNCOMMITTED) &#43;=脏写 否 读已提交(READ COMMITTED) &#43;=脏读 否 可重复读(REPEATABLE READ) &#43;=不可重复读取 否 序列化(SERIALIZABLE) &#43;=幻读 是 MySQL默认的事务隔离级别为不可重复读。
+手动设置隔离级别
+SET [GLOBAL|SESSION] TRANSACTION ISOLATION LEVEL 隔离级别; #其中，隔离级别格式： &gt; READ UNCOMMITTED &gt; READ COMMITTED &gt; REPEATABLE READ &gt; SERIALIZABLE 或者
+SET [GLOBAL|SESSION] TRANSACTION_ISOLATION = &#39;隔离级别&#39; #其中，隔离级别格式： &gt; READ-UNCOMMITTED &gt; READ-COMMITTED &gt; REPEATABLE-READ &gt; SERIALIZABLE "/>
+
+    <meta property="og:title" content="事务的特性" />
+<meta property="og:description" content="MySQL事务 1,事务的四大特性 四大特性即：
+原子性：一组操作封装为一个执行单元，该组操作指令只能同时成功或者同时失败。 一致性：事务执行前后数据的状态和合法性是一致的。 隔离性：事务之间具有隔离性，根据个隔离级别确定影响的大小。 持久性：事务执行完毕后，数据会被永久改变，持久化到磁盘上。 2,事务的隔离级别 事务之间的执行具有四种影响的现象，由低到高依次排列为：
+脏写：事务a修改了事务b修改了但未提交的数值，事务a回滚，导致事务b写入的数值丢失。 脏读：读取到别的事务写入的临时数据，事务回滚了，数值丢失。 不可重复读：读取到的数据被其他事务修改了，再次读取时数据不一致。 幻读：事务读取到了其他事务提交的临时数据，下次再次读取时，事务回滚了，之前读取的数据不存在了。 MySQL对此的解决方案，设置隔离级别，分别为：
+隔离级别 解决问题 锁 读未提交(READ UNCOMMITTED) &#43;=脏写 否 读已提交(READ COMMITTED) &#43;=脏读 否 可重复读(REPEATABLE READ) &#43;=不可重复读取 否 序列化(SERIALIZABLE) &#43;=幻读 是 MySQL默认的事务隔离级别为不可重复读。
+手动设置隔离级别
+SET [GLOBAL|SESSION] TRANSACTION ISOLATION LEVEL 隔离级别; #其中，隔离级别格式： &gt; READ UNCOMMITTED &gt; READ COMMITTED &gt; REPEATABLE READ &gt; SERIALIZABLE 或者
+SET [GLOBAL|SESSION] TRANSACTION_ISOLATION = &#39;隔离级别&#39; #其中，隔离级别格式： &gt; READ-UNCOMMITTED &gt; READ-COMMITTED &gt; REPEATABLE-READ &gt; SERIALIZABLE " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://lyfantasy.github.io/post/%E4%BA%8B%E5%8A%A1/" /><meta property="article:section" content="post" />
+
+
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://lyfantasy.github.io/"><img class="app-header-avatar" src="/images/03.jpg" alt="LQY" /></a>
+      <span class="app-header-title">LQY的备忘录</span>
+      <p>关山难越，谁悲失路之人；萍水相逢，尽是他乡之客。</p>
+      <div class="app-header-social">
+        
+          <a href="https://github.com/lyfantasy" target="_blank" rel="noreferrer noopener me">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>Github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg>
+          </a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">事务的特性</h1>
+      <div class="post-meta">
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Jan 1, 0001
+        </div>
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="mysql事务">MySQL事务</h1>
+<h2 id="1事务的四大特性">1,事务的四大特性</h2>
+<blockquote>
+<p>四大特性即：</p>
+<ul>
+<li>原子性：一组操作封装为一个执行单元，该组操作指令只能同时成功或者同时失败。</li>
+<li>一致性：事务执行前后数据的状态和合法性是一致的。</li>
+<li>隔离性：事务之间具有隔离性，根据个隔离级别确定影响的大小。</li>
+<li>持久性：事务执行完毕后，数据会被永久改变，持久化到磁盘上。</li>
+</ul>
+</blockquote>
+<h2 id="2事务的隔离级别">2,事务的隔离级别</h2>
+<blockquote>
+<p>事务之间的执行具有四种影响的现象，由低到高依次排列为：</p>
+<ul>
+<li>脏写：事务a修改了事务b修改了但未提交的数值，事务a回滚，导致事务b写入的数值丢失。</li>
+<li>脏读：读取到别的事务写入的临时数据，事务回滚了，数值丢失。</li>
+<li>不可重复读：读取到的数据被其他事务修改了，再次读取时数据不一致。</li>
+<li>幻读：事务读取到了其他事务提交的临时数据，下次再次读取时，事务回滚了，之前读取的数据不存在了。</li>
+</ul>
+</blockquote>
+<p>MySQL对此的解决方案，设置隔离级别，分别为：</p>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>解决问题</th>
+<th>锁</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>读未提交(READ UNCOMMITTED)</td>
+<td>+=脏写</td>
+<td>否</td>
+</tr>
+<tr>
+<td>读已提交(READ COMMITTED)</td>
+<td>+=脏读</td>
+<td>否</td>
+</tr>
+<tr>
+<td>可重复读(REPEATABLE READ)</td>
+<td>+=不可重复读取</td>
+<td>否</td>
+</tr>
+<tr>
+<td>序列化(SERIALIZABLE)</td>
+<td>+=幻读</td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+<p>MySQL默认的事务隔离级别为不可重复读。</p>
+<p>手动设置隔离级别</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SET</span> [<span style="color:#66d9ef">GLOBAL</span><span style="color:#f92672">|</span><span style="color:#66d9ef">SESSION</span>] <span style="color:#66d9ef">TRANSACTION</span> <span style="color:#66d9ef">ISOLATION</span> <span style="color:#66d9ef">LEVEL</span> <span style="color:#960050;background-color:#1e0010">隔离级别</span>;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">#</span><span style="color:#960050;background-color:#1e0010">其中，隔离级别格式：</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">READ</span> <span style="color:#66d9ef">UNCOMMITTED</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">READ</span> <span style="color:#66d9ef">COMMITTED</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">REPEATABLE</span> <span style="color:#66d9ef">READ</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">SERIALIZABLE</span>
+</span></span></code></pre></div><p>或者</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SET</span> [<span style="color:#66d9ef">GLOBAL</span><span style="color:#f92672">|</span><span style="color:#66d9ef">SESSION</span>] TRANSACTION_ISOLATION <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;隔离级别&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">#</span><span style="color:#960050;background-color:#1e0010">其中，隔离级别格式：</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">READ</span><span style="color:#f92672">-</span><span style="color:#66d9ef">UNCOMMITTED</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">READ</span><span style="color:#f92672">-</span><span style="color:#66d9ef">COMMITTED</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">REPEATABLE</span><span style="color:#f92672">-</span><span style="color:#66d9ef">READ</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">SERIALIZABLE</span>
+</span></span></code></pre></div><h3 id="heading"></h3>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>
